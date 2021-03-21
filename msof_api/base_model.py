@@ -13,15 +13,15 @@ class BaseModel(models.Model):
     objects = BaseModelManager()
 
     created_at = models.DateTimeField(
-        verbose_name='추가된 날짜',
+        verbose_name='추가된 일시',
         auto_now_add=True
     )
     updated_at = models.DateTimeField(
-        verbose_name='수정된 날짜',
+        verbose_name='수정된 일시',
         auto_now=True
     )
     deleted_at = models.DateTimeField(
-        verbose_name='삭제된 날짜',
+        verbose_name='삭제된 일시',
         null=True,
         default=None
     )
