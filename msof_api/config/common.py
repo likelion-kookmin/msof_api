@@ -16,7 +16,6 @@ class Common(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
 
-
         # Third party apps
         'rest_framework',            # utilities for rest apis
         'rest_framework.authtoken',  # token authentication
@@ -24,7 +23,7 @@ class Common(Configuration):
 
         # Your apps
         'msof_api.users',
-
+        'msof_api.log',
     )
 
     # https://docs.djangoproject.com/en/2.0/topics/http/middleware/
