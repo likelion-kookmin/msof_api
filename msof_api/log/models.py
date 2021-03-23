@@ -21,7 +21,7 @@ class PointRule(models.Model):
 
     def __str__(self):
         return self.name
-        
+
 class Activity(models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE)
     point_rule = models.ForeignKey(PointRule, on_delete = models.CASCADE)
@@ -29,3 +29,4 @@ class Activity(models.Model):
     # TODO: str에 created를 추가해줘야함. 
     def __str__(self):
         return "{0}님이 {1} 행동을 통해 {2}점을 얻었습니다.".format(self.user.username, self.point_rule.name, self.point_rule.point)
+        
