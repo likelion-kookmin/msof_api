@@ -6,3 +6,4 @@ from .models import Activity
 @admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
     readonly_fields = ["point"]
+    
