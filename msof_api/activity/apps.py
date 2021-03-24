@@ -1,12 +1,8 @@
-"""
-activity App
-"""
+"""activity App"""
 from django.apps import AppConfig
 
 
 class ActivityConfig(AppConfig):
-    """
-    activity config
-    """
+    """activity config"""
 
     name = "activity"

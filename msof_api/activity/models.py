@@ -1,6 +1,4 @@
-"""
-사용자의 Activity(행동) 및 PointRule(행동에 따른 점수)을 기록하는 모델을 정의
-"""
+"""사용자의 Activity(행동) 및 PointRule(행동에 따른 점수)을 기록하는 모델을 정의"""
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -9,14 +7,10 @@ from msof_api.users.models import User
 
 # TODO: 0011 Activity, PointRule 모델을 BaseModel 상속시키기    # pylint: disable=fixme
 class PointRule(models.Model):
-    """
-    행동에 따른 점수를 정하는 모델
-    """
+    """행동에 따른 점수를 정하는 모델"""
 
     class Action(models.TextChoices):
-        """
-        행동을 정의해놓은 클래스
-        """
+        """행동을 정의해놓은 클래스"""
 
         ADD_QUESTION = "질문 등록", _("register_question")
         SELECT_COMMENT = "댓글 채택", _("adopt_comment")
@@ -35,9 +29,7 @@ class PointRule(models.Model):
 
 
 class Activity(models.Model):
-    """
-    사용자의 행동을 기록하는 모델
-    """
+    """사용자의 행동을 기록하는 모델"""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="유저")
     point_rule = models.ForeignKey(PointRule, on_delete=models.CASCADE, verbose_name="규칙")
