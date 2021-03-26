@@ -2,6 +2,7 @@
 from django.db import models
 
 
+# T0D0: 16 BaseModel 상속받기
 class Question(models.Model):
     """질문 클래스"""
     MAX_TITLE_LENGTH = 200
@@ -36,6 +37,7 @@ class Question(models.Model):
         return f"{self.title}"
 
 
+# T0D0: 16 BaseModel 상속받기
 class Comment(models.Model):
     """답변 클래스"""
     STATUS_CHOICES = (
