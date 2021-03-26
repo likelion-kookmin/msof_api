@@ -11,7 +11,7 @@ class Question(models.Model):
         (1, "draft"),  # 임시 글
         (2, "Admin"),  # 관리자용 글
     )
-
+    # T0D0: 15 Question, Comment 모델 author 작업
     # author = models.ForeignKey(
     #     User,
     #     verbose_name="글쓴이",
@@ -45,6 +45,7 @@ class Comment(models.Model):
         (2, "Admin"),  # 관리자용 글
     )
 
+    # T0D0: 15 Question, Comment 모델 author 작업
     # author = models.ForeignKey(
     #     User,
     #     verbose_name="글쓴이",
