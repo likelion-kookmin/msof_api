@@ -1,6 +1,4 @@
-"""
-account urls
-"""
+"""account 앱으 url 라우터 등록"""
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
