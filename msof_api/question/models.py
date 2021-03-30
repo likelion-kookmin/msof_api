@@ -7,10 +7,10 @@ class Question(models.Model):
     """질문 클래스"""
     MAX_TITLE_LENGTH = 200
     STATUS_CHOICES = (
-        (-1, "Trash"),  # 삭제된 글
-        (0, "Published"),  # 등록된 글
-        (1, "draft"),  # 임시 글
-        (2, "Admin"),  # 관리자용 글
+        ('T', "Trash"),  # 삭제된 글
+        ('P', "Published"),  # 등록된 글
+        ('D', "Draft"),  # 임시 글
+        ('A', "Admin"),  # 관리자용 글
     )
     # T0D0: 15 Question, Comment 모델 author 작업
     # author = models.ForeignKey(
@@ -27,9 +27,10 @@ class Question(models.Model):
     content = models.TextField(
         verbose_name="내용"
     )  # 내용
-    status = models.IntegerField(
+    status = models.CharField(
         verbose_name="게시 상태",
         default=0,
+        max_length=2,
         choices=STATUS_CHOICES
     )  # 게시 상태
 
@@ -41,10 +42,10 @@ class Question(models.Model):
 class Comment(models.Model):
     """답변 클래스"""
     STATUS_CHOICES = (
-        (-1, "Trash"),  # 삭제된 글
-        (0, "Published"),  # 등록된 글
-        (1, "draft"),  # 임시 글
-        (2, "Admin"),  # 관리자용 글
+        ('T', "Trash"),  # 삭제된 글
+        ('P', "Published"),  # 등록된 글
+        ('D', "Draft"),  # 임시 글
+        ('A', "Admin"),  # 관리자용 글
     )
 
     # T0D0: 15 Question, Comment 모델 author 작업
@@ -77,9 +78,10 @@ class Comment(models.Model):
     content = models.TextField(
         verbose_name="내용"
     )  # 내용
-    status = models.IntegerField(
+    status = models.CharField(
         verbose_name="게시 상태",
         default=0,
+        max_length=2,
         choices=STATUS_CHOICES
     )  # 게시 상태
 
