@@ -3,7 +3,7 @@ site_description: msof
 repo_url: https://github.com/likelion-kookmin/msof_api
 site_dir: site
 copyright: Copyright &copy; 2020, <a href="https://github.com/likelion-kookmin">likelion-kookmin</a>.
-dev_addr: 0.0.0.0:8001
+dev_addr: 0.0.0.0:8334
 
 nav:
   - Home: 'index.md'
