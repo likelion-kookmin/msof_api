@@ -11,6 +11,7 @@ services:
     build: ./
     command: >
       bash -c "python wait_for_postgres.py &&
+               ./manage.py makemigrations --noinput &&
                ./manage.py migrate &&
                ./manage.py runserver 0.0.0.0:8333"
     volumes:

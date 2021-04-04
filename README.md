@@ -7,17 +7,22 @@ msof. Check out the project's [documentation](http://likelion-kookmin.github.io/
 
 # Prerequisites
 
-- [Docker](https://docs.docker.com/docker-for-mac/install/)  
+- [Docker](https://docs.docker.com/docker-for-mac/install/)
+- pre-commit
+```bash
+> pip install pre-commit
+> pre-commit install
+```
 
 # Local Development
 
 Start the dev server for local development:
 ```bash
-docker-compose up
+> docker-compose up -d
 ```
 
 Run a command inside the docker container:
 
 ```bash
-docker-compose run --rm web [command]
+> docker-compose run --rm web [command]
 ```
