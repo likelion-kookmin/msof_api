@@ -29,6 +29,7 @@ class Common(Configuration):
         'msof_api.users',
         'msof_api.question',
         'msof_api.activity',
+        'msof_api.perform',
     )
 
     # https://docs.djangoproject.com/en/2.0/topics/http/middleware/
