@@ -1,12 +1,16 @@
+"""msof_api setting 파일"""
 import os
-from os.path import join
 from distutils.util import strtobool
+from os.path import join
+
 import dj_database_url
 from configurations import Configuration
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 class Common(Configuration):
+    """Configuration을 상속 받는 Common 설정 클래스"""
 
     INSTALLED_APPS = (
         'django.contrib.admin',
@@ -16,7 +20,6 @@ class Common(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
 
-
         # Third party apps
         'rest_framework',            # utilities for rest apis
         'rest_framework.authtoken',  # token authentication
@@ -24,7 +27,8 @@ class Common(Configuration):
 
         # Your apps
         'msof_api.users',
-
+        'msof_api.question',
+        'msof_api.activity',
     )
 
     # https://docs.djangoproject.com/en/2.0/topics/http/middleware/
@@ -54,7 +58,7 @@ class Common(Configuration):
     DATABASES = {
         'default': dj_database_url.config(
             default='postgres://postgres:@postgres:5432/postgres',
-            conn_max_age=int(os.getenv('POSTGRES_CONN_MAX_AGE', 600))
+            conn_max_age=int(os.getenv('POSTGRES_CONN_MAX_AGE', '600'))
         )
     }
 
@@ -185,7 +189,7 @@ class Common(Configuration):
     # Django Rest Framework
     REST_FRAMEWORK = {
         'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-        'PAGE_SIZE': int(os.getenv('DJANGO_PAGINATION_LIMIT', 10)),
+        'PAGE_SIZE': int(os.getenv('DJANGO_PAGINATION_LIMIT', '10')),
         'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%S%z',
         'DEFAULT_RENDERER_CLASSES': (
             'rest_framework.renderers.JSONRenderer',
@@ -199,3 +203,6 @@ class Common(Configuration):
             'rest_framework.authentication.TokenAuthentication',
         )
     }
+
+    def __init__(self):
+        super()
