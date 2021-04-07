@@ -2,11 +2,12 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from msof_api.base_model import BaseModel
 from msof_api.users.models import User
 
 
-# TODO: 0011 Activity, PointRule 모델을 BaseModel 상속시키기    # pylint: disable=fixme
-class PointRule(models.Model):
+# pylint: disable=fixme
+class PointRule(BaseModel):
     """행동에 따른 점수를 정하는 모델"""
 
     class Action(models.TextChoices):
@@ -28,7 +29,7 @@ class PointRule(models.Model):
         return str(self.name)
 
 
-class Activity(models.Model):
+class Activity(BaseModel):
     """사용자의 행동을 기록하는 모델"""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="유저")
