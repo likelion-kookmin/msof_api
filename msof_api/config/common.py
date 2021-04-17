@@ -14,6 +14,10 @@ class Common(Configuration):
     """Configuration을 상속 받는 Common 설정 클래스"""
 
     INSTALLED_APPS = (
+        # General use templates & template tags (should appear first)
+        'adminlte3',
+        # Optional: Django admin theme (must be before django.contrib.admin)
+        'adminlte3_theme',
         'django.contrib.admin',
         'django.contrib.auth',
         'django.contrib.sites',
@@ -80,7 +84,7 @@ class Common(Configuration):
 
     # General
     APPEND_SLASH = False
-    TIME_ZONE = 'UTC'
+    TIME_ZONE = 'Asia/Seoul'
     LANGUAGE_CODE = 'en-us'
     # If you set this to False, Django will make some optimizations so as not
     # to load the internationalization machinery.
