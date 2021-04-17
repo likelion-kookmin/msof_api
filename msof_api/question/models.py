@@ -1,9 +1,9 @@
 """Question(질문 게시글)과 Comment(답변) 모델"""
 from django.db import models
-
+from msof_api.base_model import BaseModel
 
 # T0D0: 16 BaseModel 상속받기
-class Question(models.Model):
+class Question(BaseModel):
     """질문 클래스"""
     MAX_TITLE_LENGTH = 200
     STATUS_CHOICES = (
@@ -39,7 +39,7 @@ class Question(models.Model):
 
 
 # T0D0: 16 BaseModel 상속받기
-class Comment(models.Model):
+class Comment(BaseModel):
     """답변 클래스"""
     STATUS_CHOICES = (
         ('T', "Trash"),  # 삭제된 글
