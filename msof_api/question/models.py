@@ -1,10 +1,36 @@
 """Question(질문 게시글)과 Comment(답변) 모델"""
 from django.db import models
+
 from msof_api.base_model import BaseModel
+
+
+class QuestionQuerySet(models.QuerySet):
+    """Question Class Query Set
+    Use like `Quesition.published()`
+    """
+
+    def published(self):
+        """등록된 질문만 리턴합니다."""
+        return self.filter(status='P')
+
+    def admin(self):
+        """관리자용 질문만 리턴합니다."""
+        return self.filter(status='A')
+
+    def recent_updated(self):
+        """최근 수정된 질문부터 리턴합니다."""
+        return self.order_by("-updated_at")
+
+    def recent_created(self):
+        """최근 생성된 질문부터 리턴합니다."""
+        return self.order_by("-created_at")
 
 # T0D0: 16 BaseModel 상속받기
 class Question(BaseModel):
     """질문 클래스"""
+
+    objects = QuestionQuerySet.as_manager()
+
     MAX_TITLE_LENGTH = 200
     STATUS_CHOICES = (
         ('T', "Trash"),  # 삭제된 글
@@ -29,7 +55,7 @@ class Question(BaseModel):
     )  # 내용
     status = models.CharField(
         verbose_name="게시 상태",
-        default=0,
+        default='P',
         max_length=2,
         choices=STATUS_CHOICES
     )  # 게시 상태
