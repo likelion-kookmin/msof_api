@@ -2,7 +2,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from msof_api.users.models import User
+from accounts.models import User
 
 
 # TODO: 0011 Activity, PointRule 모델을 BaseModel 상속시키기    # pylint: disable=fixme
