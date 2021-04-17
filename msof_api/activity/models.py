@@ -2,11 +2,12 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from msof_api.base_model import BaseModel
 from accounts.models import User
 
 
-# TODO: 0011 Activity, PointRule 모델을 BaseModel 상속시키기    # pylint: disable=fixme
-class PointRule(models.Model):
+# pylint: disable=fixme
+class PointRule(BaseModel):
     """행동에 따른 점수를 정하는 모델"""
 
     class Action(models.TextChoices):
@@ -28,15 +29,19 @@ class PointRule(models.Model):
         return str(self.name)
 
 
-class Activity(models.Model):
+class Activity(BaseModel):
     """사용자의 행동을 기록하는 모델"""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="유저")
     point_rule = models.ForeignKey(PointRule, on_delete=models.CASCADE, verbose_name="규칙")
 
-    # TODO: 0012 created_at을  __str__에 추가하기   # pylint: disable=fixme
+    # pylint: disable=fixme
     def __str__(self):
         # pylint: disable=E1101
-        return "{0}님이 {1} 행동을 통해 {2}점을 얻었습니다.".format(
-            self.user.username, self.point_rule.name, self.point_rule.point
+        return "{0}님이 {1} 행동을 통해 {2}점을 얻었습니다.{3}/{4}".format(
+            self.user.username,
+            self.point_rule.name,
+            self.point_rule.point,
+            self.created_at,
+            self.updated_at,
         )
