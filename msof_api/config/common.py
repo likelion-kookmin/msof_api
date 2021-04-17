@@ -1,4 +1,5 @@
 """msof_api setting 파일"""
+import datetime
 import os
 from distutils.util import strtobool
 from os.path import join
@@ -15,6 +16,7 @@ class Common(Configuration):
     INSTALLED_APPS = (
         'django.contrib.admin',
         'django.contrib.auth',
+        'django.contrib.sites',
         'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.messages',
@@ -24,12 +26,25 @@ class Common(Configuration):
         'rest_framework',            # utilities for rest apis
         'rest_framework.authtoken',  # token authentication
         'django_filters',            # for filtering rest endpoints
+        'rest_auth',
+        'allauth',
+        'allauth.account',
+        'allauth.socialaccount',
+        'rest_auth.registration',
 
         # Your apps
-        'msof_api.users',
+        'accounts',
         'msof_api.question',
         'msof_api.activity',
+        'msof_api.perform',
     )
+    AUTHENTICATION_BACKENDS = [
+        # Needed to login by username in Django admin, regardless of `allauth`
+        'django.contrib.auth.backends.ModelBackend',
+        # `allauth` specific authentication methods, such as login by e-mail
+        'allauth.account.auth_backends.AuthenticationBackend',
+    ]
+
 
     # https://docs.djangoproject.com/en/2.0/topics/http/middleware/
     MIDDLEWARE = (
@@ -47,6 +62,7 @@ class Common(Configuration):
     SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
     WSGI_APPLICATION = 'msof_api.wsgi.application'
 
+    SITE_ID = 1
     # Email
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
@@ -184,8 +200,9 @@ class Common(Configuration):
     }
 
     # Custom user app
-    AUTH_USER_MODEL = 'users.User'
+    AUTH_USER_MODEL = 'accounts.User'
 
+    REST_USE_JWT = True
     # Django Rest Framework
     REST_FRAMEWORK = {
         'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -195,13 +212,27 @@ class Common(Configuration):
             'rest_framework.renderers.JSONRenderer',
             'rest_framework.renderers.BrowsableAPIRenderer',
         ),
-        'DEFAULT_PERMISSION_CLASSES': [
-            'rest_framework.permissions.IsAuthenticated',
-        ],
+        # TODO: 나중에 인증부분 할때 주석풀어야됨
+        # 'DEFAULT_PERMISSION_CLASSES': [
+        #     'rest_framework.permissions.IsAuthenticated',
+        # ],
         'DEFAULT_AUTHENTICATION_CLASSES': (
-            'rest_framework.authentication.SessionAuthentication',
+            # 'rest_framework.authentication.SessionAuthentication',
+            'rest_framework.authentication.TokenAuthentication',
+            'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
             'rest_framework.authentication.TokenAuthentication',
         )
+    }
+    JWT_AUTH = {
+        'JWT_SECRET_KEY': SECRET_KEY,
+        # JWT_ALGORITHM : JWT 암호화에 사용되는 알고리즘 설정
+        'JWT_ALGORITHM': 'HS256',
+        'JWT_ALLOW_REFRESH': True,
+        # JWT_ALLOW_REFRESH : JWT 토큰을 refresh할건지
+        'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+        # JWT_EXPIRATION_DELTA : JWT 토큰의 유효기간 설정
+        'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),
+        # JWT_REFRESH_EXPIRATION_DELTA : JWT 토큰의 갱신 유효기간
     }
 
     def __init__(self):

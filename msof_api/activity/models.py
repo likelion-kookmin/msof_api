@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from msof_api.base_model import BaseModel
-from msof_api.users.models import User
+from accounts.models import User
 
 
 # pylint: disable=fixme
