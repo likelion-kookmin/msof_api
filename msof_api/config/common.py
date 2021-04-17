@@ -36,6 +36,7 @@ class Common(Configuration):
         'accounts',
         'msof_api.question',
         'msof_api.activity',
+        'msof_api.perform',
     )
     AUTHENTICATION_BACKENDS = [
         # Needed to login by username in Django admin, regardless of `allauth`
