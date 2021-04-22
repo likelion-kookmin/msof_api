@@ -2,11 +2,11 @@
 from django.db import models
 
 from accounts.models import User
-from msof_api.base_model import BaseModel
+from msof_api.base_model import BaseModel, BaseModelManager
 
 
-class QuestionQuerySet(models.QuerySet):
-    """Question Class Query Set
+class QuestionQueryManager(BaseModelManager):
+    """QuestionQueryManager
     Use like `Quesition.published()`
     """
 
@@ -30,7 +30,7 @@ class QuestionQuerySet(models.QuerySet):
 class Question(BaseModel):
     """질문 클래스"""
 
-    objects = QuestionQuerySet.as_manager()
+    objects = QuestionQueryManager()
 
     MAX_TITLE_LENGTH = 200
     STATUS_CHOICES = (
