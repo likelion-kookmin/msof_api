@@ -2,11 +2,14 @@
 request에 따른 response를 처리하기 위한 모듈
 """
 
+import json
+
 from django.forms.models import model_to_dict
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     ListAPIView, RetrieveAPIView)
+                                     ListAPIView, RetrieveAPIView,
+                                     UpdateAPIView)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
@@ -106,6 +109,77 @@ class QuestionCreateView(CreateAPIView):
                 'error': str(e)
             }
         return Response(response, status=status_code)
+
+class QuestionUpdateView(UpdateAPIView):
+    """QuestionUpdateView<br>"""
+
+    permission_classes = [IsAuthenticated, QuestionEditableOrDestroyablePermission]
+    authentication_classes = [JSONWebTokenAuthentication, SessionAuthentication]
+
+    def get_object(self, question_id):  # pylint: disable=W0221
+        try:
+            question = Question.objects.get(pk=question_id)
+            self.check_object_permissions(self.request, question)
+            return question
+        except Question.DoesNotExist:  # pylint: disable=no-member
+            return None
+
+    def put(self, request, *args, **kwargs):
+        """PUT: /quetion/<int:id>"""
+        try:
+            put_params = json.loads(request.body.decode("utf-8"), strict=False)
+            question = self.get_object(kwargs['id'])
+            title = put_params['title']
+            content = put_params['content']
+
+            if title is None or content is None:
+                raise Exception
+
+            question.title = title
+            question.content = content
+            question.save()
+            status_code = status.HTTP_200_OK
+            response = {
+                'success': 'true',
+                'status code': status_code,
+                'message': 'Question is updated successfully',
+            }
+        except Exception as e:  # pylint: disable=W0703
+            status_code = status.HTTP_400_BAD_REQUEST
+            response = {
+                'success': 'false',
+                'status code': status_code,
+                'message': 'Question is not updated',
+                'error': str(e)
+            }
+        return Response(response, status=status_code)
+
+    def patch(self, request, *args, **kwargs):
+        """PUT: /quetion/<int:id>"""
+        try:
+            patch_params = json.loads(request.body.decode("utf-8"), strict=False)
+            question = self.get_object(kwargs['id'])
+            if 'title' in patch_params:
+                question.title = patch_params['title']
+            if 'content' in patch_params:
+                question.content = patch_params['content']
+            question.save()
+            status_code = status.HTTP_200_OK
+            response = {
+                'success': 'true',
+                'status code': status_code,
+                'message': 'Question is updated successfully',
+            }
+        except Exception as e:  # pylint: disable=W0703
+            status_code = status.HTTP_400_BAD_REQUEST
+            response = {
+                'success': 'false',
+                'status code': status_code,
+                'message': 'Question is not updated',
+                'error': str(e)
+            }
+        return Response(response, status=status_code)
+
 
 class QuestionDestroyView(DestroyAPIView):
     """QuestionDestroyView<br>"""

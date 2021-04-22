@@ -3,7 +3,7 @@
 from django.urls import path
 
 from .views import (QuestionCreateView, QuestionDestroyView, QuestionIndexView,
-                    QuestionShowView)
+                    QuestionShowView, QuestionUpdateView)
 
 app_name = 'question'
 
@@ -12,4 +12,5 @@ urlpatterns = [
     path('new/', QuestionCreateView.as_view()),
     path('<int:id>/', QuestionShowView.as_view()),
     path('<int:id>/destroy/', QuestionDestroyView.as_view()),
+    path('<int:id>/edit/', QuestionUpdateView.as_view()),
 ]
