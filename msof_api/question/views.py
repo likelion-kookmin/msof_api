@@ -54,7 +54,7 @@ class QuestionShowView(RetrieveAPIView):
             response = {
                 'success': 'true',
                 'status code': status_code,
-                'message': 'Question list feteched successfully',
+                'message': 'Question feteched successfully',
                 'data': question
             }
         except Exception as e:  # pylint: disable=W0703
@@ -109,14 +109,22 @@ class QuestionCreateView(CreateAPIView):
 
 class QuestionDestroyView(DestroyAPIView):
     """QuestionDestroyView<br>"""
+
     permission_classes = [IsAuthenticated, QuestionEditableOrDestroyablePermission]
     authentication_classes = [JSONWebTokenAuthentication, SessionAuthentication]
 
+    def get_object(self, question_id):  # pylint: disable=W0221
+        try:
+            question = Question.objects.get(pk=question_id)
+            self.check_object_permissions(self.request, question)
+            return question
+        except Question.DoesNotExist:  # pylint: disable=no-member
+            return None
 
     def delete(self, request, *args, **kwargs):
         """DELETE: /quetion/<int:id>"""
         try:
-            question = Question.objects.get(pk=kwargs['id'])
+            question = self.get_object(kwargs['id'])
             question.delete()
             status_code = status.HTTP_200_OK
             response = {
