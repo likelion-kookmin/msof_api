@@ -1,15 +1,13 @@
 """Quetion App url 라우터 등록"""
 
-from django.urls import include, path
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .views import QuestionViewSet
+from .views import QuestionCreateView, QuestionIndexView, QuestionShowView
 
 app_name = 'question'
 
-router = DefaultRouter()
-router.register('question', QuestionViewSet)
-
 urlpatterns = [
-    path('', include(router.urls))
+    path('', QuestionIndexView.as_view()),
+    path('new/', QuestionCreateView.as_view()),
+    path('<int:id>/', QuestionShowView.as_view()),
 ]

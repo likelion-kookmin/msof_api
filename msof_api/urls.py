@@ -1,11 +1,8 @@
-"""
-urls
-"""
+"""msof_api project urls"""
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path, re_path, reverse_lazy
-from django.views.generic.base import RedirectView
+from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,5 +12,4 @@ urlpatterns = [
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('user/', include('accounts.urls')),
     path('question/', include('msof_api.question.urls')),
-    re_path(r'^$', RedirectView.as_view(url=reverse_lazy('api-root'), permanent=False)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

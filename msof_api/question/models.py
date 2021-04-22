@@ -1,6 +1,7 @@
 """Question(질문 게시글)과 Comment(답변) 모델"""
 from django.db import models
 
+from accounts.models import User
 from msof_api.base_model import BaseModel
 
 
@@ -38,14 +39,13 @@ class Question(BaseModel):
         ('D', "Draft"),  # 임시 글
         ('A', "Admin"),  # 관리자용 글
     )
-    # T0D0: 15 Question, Comment 모델 author 작업
-    # author = models.ForeignKey(
-    #     User,
-    #     verbose_name="글쓴이",
-    #     on_delete=models.SET,
-    #     related_name="questions",
-    #     null=True
-    # ) # 글쓴이
+    author = models.ForeignKey(
+        User,
+        verbose_name="글쓴이",
+        on_delete=models.SET,
+        related_name="questions",
+        null=True
+    ) # 글쓴이
     title = models.CharField(
         verbose_name="제목",
         max_length=MAX_TITLE_LENGTH
@@ -64,7 +64,6 @@ class Question(BaseModel):
         return f"{self.title}"
 
 
-# T0D0: 16 BaseModel 상속받기
 class Comment(BaseModel):
     """답변 클래스"""
     STATUS_CHOICES = (
@@ -74,14 +73,13 @@ class Comment(BaseModel):
         ('A', "Admin"),  # 관리자용 글
     )
 
-    # T0D0: 15 Question, Comment 모델 author 작업
-    # author = models.ForeignKey(
-    #     User,
-    #     verbose_name="글쓴이",
-    #     on_delete=models.SET_NULL,
-    #     related_name="answered_comments",
-    #     null=True
-    # ) # 글쓴이
+    author = models.ForeignKey(
+        User,
+        verbose_name="글쓴이",
+        on_delete=models.SET_NULL,
+        related_name="answered_comments",
+        null=True
+    ) # 글쓴이
     question = models.ForeignKey(
         Question,
         verbose_name="질문",
