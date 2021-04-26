@@ -26,7 +26,6 @@ class QuestionQueryManager(BaseModelManager):
         """최근 생성된 질문부터 리턴합니다."""
         return self.order_by("-created_at")
 
-# T0D0: 16 BaseModel 상속받기
 class Question(BaseModel):
     """질문 클래스"""
 
