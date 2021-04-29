@@ -38,4 +38,4 @@ class BaseModel(models.Model):
 
     def restore(self):
         self.deleted_at = None
-        self.sace(update_fields=['deleted_at'])
+        self.save(update_fields=['deleted_at'])
