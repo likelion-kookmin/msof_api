@@ -4,7 +4,9 @@ ENV PYTHONUNBU FFERED 1
 COPY . code
 WORKDIR code
 
+RUN apt-get clean
 RUN apt-get update -y
+RUN apt-get -f install
 RUN apt-get upgrade -y
 RUN pip install -r requirements.txt
 
