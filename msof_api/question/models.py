@@ -5,9 +5,9 @@ from accounts.models import User
 from msof_api.base_model import BaseModel, BaseModelManager
 
 
-class QuestionQueryManager(BaseModelManager):
-    """QuestionQueryManager
-    Use like `Quesition.published()`
+class QuestionQuerySet(models.QuerySet):
+    """QuestionQuerySet
+    Use like `Quesition.objects.published()`
     """
 
     def published(self):
@@ -29,7 +29,7 @@ class QuestionQueryManager(BaseModelManager):
 class Question(BaseModel):
     """질문 클래스"""
 
-    objects = QuestionQueryManager()
+    objects = BaseModelManager.from_queryset(QuestionQuerySet)()
 
     MAX_TITLE_LENGTH = 200
     STATUS_CHOICES = (
