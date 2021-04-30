@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 
+
 class BaseModelManager(models.Manager):
     # NOTE: 해당 옵션은 기본 매니저로 이 매니저를 정의한 모델이 있을 때 이 모델을 가리키는 모든 관계 참조에서 모델 매니저를 사용할 수 있도록 한다.
     # 참고링크: https://velog.io/@kim6515516/장고에서-모델-소프트-삭제-구현하기
@@ -37,4 +38,4 @@ class BaseModel(models.Model):
 
     def restore(self):
         self.deleted_at = None
-        self.sace(update_fields=['deleted_at'])
+        self.save(update_fields=['deleted_at'])
