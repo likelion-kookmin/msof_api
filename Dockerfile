@@ -1,14 +1,31 @@
-FROM python:3
+###########################################
+# Generate package wheel files
+FROM python:3.8-slim-buster as package
 ENV PYTHONUNBU FFERED 1
-# Adds our application code to the image
-COPY . code
-WORKDIR code
 
-RUN apt-get clean
-RUN apt-get update -y
-RUN apt-get -f install
-RUN apt-get upgrade -y
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip
+COPY requirements.txt .
+RUN pip wheel -w /root/wheels -r requirements.txt
+
+###########################################
+# Run django api server
+FROM python:3.8-slim-buster as builder
+ENV PYTHONUNBU FFERED 1
+
+RUN apt-get update -y \
+    && apt-get -f install \
+    && apt-get upgrade -y \
+    && apt-get clean \
+    && pip install --upgrade pip
+
+# Install packages
+WORKDIR /code
+COPY --from=package /root/wheels /root/wheels
+COPY requirements.txt .
+RUN pip install --no-index --find-links=/root/wheels -r requirements.txt
+
+# Adds our application code to the image
+COPY . .
 
 EXPOSE 8333
 
