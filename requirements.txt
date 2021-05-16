@@ -26,6 +26,7 @@ django-adminlte-3==0.1.6
 django-adminlte3==0.1.6
 django-allauth==0.44.0
 django-configurations==2.2
+django-cors-headers==3.7.0
 django-filter==2.4.0
 django-model-utils==4.1.1
 django-nose==1.4.7
