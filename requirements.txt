@@ -23,6 +23,7 @@ distlib==0.3.1
 dj-database-url==0.5.0
 Django==3.1.7
 django-adminlte-3==0.1.6
+django-adminlte3==0.1.6
 django-allauth==0.44.0
 django-configurations==2.2
 django-filter==2.4.0
