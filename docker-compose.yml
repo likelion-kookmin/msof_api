@@ -27,4 +27,4 @@ services:
     volumes:
       - ./:/code
     ports:
-      - "8001:8001"
+      - "8334:8334"
