@@ -6,7 +6,7 @@ copyright: Copyright &copy; 2020, <a href="https://github.com/likelion-kookmin">
 dev_addr: 0.0.0.0:8334
 
 nav:
-  - Home: 'index.md'
+  - Home: "index.md"
   - API:
-    - Authentication: 'api/authentication.md'
-    - Users: 'api/users.md'
+      - Authentication: "api/authentication.md"
+      - Users: "api/users.md"

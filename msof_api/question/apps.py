@@ -4,4 +4,4 @@ from django.apps import AppConfig
 
 class QuestionConfig(AppConfig):
     """Question 모델 설정"""
-    name = 'question'
+    name = "question"
