@@ -4,8 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
-from msof_api.activity.models import Activity, PointRule
-from msof_api.perform.models import Perform
+from msof_api.activity.models import Action, Activity, PointRule
+from msof_api.perform.models import Perform, PerformCategoryChoice
 from msof_api.question.models import Comment, Question
 
 User = get_user_model()
@@ -17,28 +17,22 @@ def create_question_activity(sender, **kwargs):
     instance = kwargs["instance"]
 
     user = instance.author
-    rule = PointRule.objects.get(name="질문 등록")
 
     if instance.id is not None:
         return
 
-    activity = Activity.objects.create(user=user, point_rule=rule)
-    user.total_point += activity.point_rule.point
-    user.save()
+    create_like_activity_and_reset_user_total_point(user=user, rule_name=Action.ADD_QUESTION)
 
 
 @receiver(post_save, sender=User)
 def create_user_activity(sender, **kwargs):
     """signup 했을 때 activity를 생성합니다."""
     user = kwargs["instance"]
-    rule = PointRule.objects.get(name="회원가입")
 
     if not kwargs["created"]:
         return
 
-    Activity.objects.create(user=user, point_rule=rule)
-    user.total_point += 10
-    user.save(update_fields=["total_point"])
+    create_like_activity_and_reset_user_total_point(user=user, rule_name=Action.SIGNUP)
 
 
 @receiver(pre_save, sender=Comment)
@@ -49,53 +43,76 @@ def selected_comment_activity(sender, **kwargs):
     """
     instance = kwargs["instance"]
     comment_user = instance.author
-    comment_rule = PointRule.objects.get(name="채택받은 댓글")
     question_user = instance.question.author
-    question_rule = PointRule.objects.get(name="댓글 채택")
 
     if instance.selected and not Comment.objects.get(id=instance.id).selected:
-        comment_activity = Activity.objects.create(user=comment_user, point_rule=comment_rule)
-        comment_user.total_point += comment_activity.point_rule.point
-        comment_user.save()
-
-        question_activity = Activity.objects.create(user=question_user, point_rule=question_rule)
-        question_user.total_point += question_activity.point_rule.point
-        question_user.save()
+        create_like_activity_and_reset_user_total_point(
+            user=comment_user, rule_name=Action.SELECTED_COMMENT
+        )
+        create_like_activity_and_reset_user_total_point(
+            user=question_user, rule_name=Action.SELECT_COMMENT
+        )
 
     else:
         return
 
 
+# pylint: disable=W0702
 @receiver(pre_save, sender=Perform)
 def create_like_activity(sender, **kwargs):
     """like 관련 Activity
     question가 like되었을 때 activity를 생성합니다.
     comment가 like되었을 때 activity를 생성합니다.
     """
-    instance = kwargs["instance"]
-    # user = instance.user
-    # comment_rule = PointRule.objects.get(name="좋아요받은 댓글")
-    # question_rule = PointRule.objects.get(name="좋아요받은 질문")
+    comment_type = ContentType.objects.get_for_model(Comment)
+    question_type = ContentType.objects.get_for_model(Question)
 
-    performed_type = instance.performed_type
-    # performed_id = instance.performed_id
+    instance = kwargs["instance"]
     category = instance.category
 
-    if instance.id is None:
-        return
-
-    prev_instacne = Perform.objects.get(id=instance.id)
+    prev_instacne = Perform.objects.filter(id=instance.id).first()
     prev_category = prev_instacne.category if prev_instacne else "None"
 
-    print(category, prev_category)
-    if category == 1 and prev_category != 1:
-        if performed_type == ContentType.objects.get_for_model(Comment):
-            print("comment")
-            # activity = Activity.objects.create(user=user, point_rule=question_rule)
+    performed_type = instance.performed_type
+    performed_id = instance.performed_id
+    user = performed_type.get_object_for_this_type(id=performed_id).author
 
-        if performed_type == ContentType.objects.get_for_model(Question):
-            print("question")
-            # activity = Activity.objects.create(user=user, point_rule=comment_rule)
+    if category == PerformCategoryChoice.LIKE and prev_category != PerformCategoryChoice.LIKE:
+        try:
+            if performed_type == comment_type:
+                create_like_activity_and_reset_user_total_point(
+                    user=user, rule_name=Action.LIKED_COMMENT
+                )
 
-    else:
-        return
+            if performed_type == question_type:
+                create_like_activity_and_reset_user_total_point(
+                    user=user, rule_name=Action.LIKED_QUESTION
+                )
+
+        except Exception as e:
+            print(e)
+            return
+
+    elif category != PerformCategoryChoice.LIKE and prev_category == PerformCategoryChoice.LIKE:
+        try:
+            if performed_type == comment_type:
+                create_like_activity_and_reset_user_total_point(
+                    user=user, rule_name=Action.CANCEL_LIKED_COMMENT
+                )
+
+            if performed_type == question_type:
+                create_like_activity_and_reset_user_total_point(
+                    user=user, rule_name=Action.CANCEL_LIKED_QUESTION
+                )
+
+        except Exception as e:
+            print(e)
+            return
+
+
+def create_like_activity_and_reset_user_total_point(user, rule_name):
+    """activity 생성 및 user total_point 재설정"""
+    rule = PointRule.objects.get_or_create(name=rule_name)[0]
+    activity = Activity.objects.create(user=user, point_rule=rule)
+    user.total_point += activity.point_rule.point
+    user.save()

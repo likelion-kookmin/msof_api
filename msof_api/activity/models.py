@@ -6,19 +6,22 @@ from accounts.models import User
 from msof_api.base_model import BaseModel
 
 
+class Action(models.TextChoices):
+    """행동을 정의해놓은 클래스"""
+
+    ADD_QUESTION = "질문 등록", _("register_question")
+    SELECT_COMMENT = "댓글 채택", _("select_comment")
+    SELECTED_COMMENT = "채택받은 댓글", _("selected_comment")
+    SIGNUP = "회원가입", _("signup")
+    LIKED_COMMENT = "좋아요받은 댓글", _("liked_comment")
+    LIKED_QUESTION = "좋아요받은 질문", _("liked_question")
+    CANCEL_LIKED_COMMENT = "댓글에 대한 좋아요 취소", _("cancle_liked_comment")
+    CANCEL_LIKED_QUESTION = "질문에 대한 좋아요 취소", _("cancle_liked_question")
+
+
 # pylint: disable=fixme
 class PointRule(BaseModel):
     """행동에 따른 점수를 정하는 모델"""
-
-    class Action(models.TextChoices):
-        """행동을 정의해놓은 클래스"""
-
-        ADD_QUESTION = "질문 등록", _("register_question")
-        SELECT_COMMENT = "댓글 채택", _("select_comment")
-        SELECTED_COMMENT = "채택받은 댓글", _("selected_comment")
-        SIGNUP = "회원가입", _("signup")
-        LIKED_COMMENT = "좋아요받은 댓글", _("liked_comment")
-        LIKED_QUESTION = "좋아요받은 질문", _("liked_question")
 
     point = models.IntegerField(default=0, verbose_name="점수")
     name = models.CharField(
