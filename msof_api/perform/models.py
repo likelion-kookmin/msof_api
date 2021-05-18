@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
+from accounts.models import User
 from msof_api.base_model import BaseModel
 
 
@@ -19,8 +20,11 @@ class Perform(BaseModel):
         ('dislike', '싫어요'),
     )
 
-    # TODO: user foreign key 추가
-
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True
+    )
     performed_type = models.ForeignKey(
         ContentType,
         on_delete=models.CASCADE,
