@@ -93,7 +93,7 @@ class QuestionCreateView(CreateAPIView):
             question.save()
             question = model_to_dict(question)
 
-            status_code = status.HTTP_200_OK
+            status_code = status.HTTP_201_CREATED
             response = {
                 'success': 'true',
                 'status code': status_code,
