@@ -8,8 +8,8 @@ from django.apps import AppConfig
 class HistoryConfig(AppConfig):
     """ # HistoryConfig """
 
-    name = "history"
+    name = "msof_api.history"
 
     # pylint: disable=W0611, C0415
     def ready(self):
-        import msof_api.history.signals
+        from . import signals
