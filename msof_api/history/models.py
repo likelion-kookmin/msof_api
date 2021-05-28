@@ -71,7 +71,9 @@ class History(BaseModel):
         viewed_type = ContentType.objects.get_for_model(viewed_obj)
 
         history_obj, created = History.objects.get_or_create(
-            viewer=viewer, viewed_type=viewed_type, viewed_id=viewed_obj.id
+            viewer=viewer,
+            viewed_type=viewed_type,
+            viewed_id=viewed_obj.id
         )
         if not created:
             history_obj.viewed_count += 1

@@ -17,11 +17,11 @@ def reset_question_viewed_count(sender, **kwargs):
     if viewed_model != Question:
         return
 
-    question = viewed_model.objects.filter(id=viewed_id).first()
+    question = viewed_model.get_object_for_this_type(pk=viewed_id)
     history = History.objects.filter(id=instance.id).first()
 
     if not history:
-        question.viewed_count += 1
+        question.viewed_count += instance.viewed_count
 
     else:
         delta = instance.viewed_count - history.viewed_count

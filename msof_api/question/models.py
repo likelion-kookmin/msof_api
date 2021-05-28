@@ -12,11 +12,11 @@ class QuestionQuerySet(models.QuerySet):
 
     def published(self):
         """등록된 질문만 리턴합니다."""
-        return self.filter(status="P")
+        return self.filter(status='P')
 
     def admin(self):
         """관리자용 질문만 리턴합니다."""
-        return self.filter(status="A")
+        return self.filter(status='A')
 
     def recent_updated(self):
         """최근 수정된 질문부터 리턴합니다."""
@@ -34,16 +34,25 @@ class Question(BaseModel):
 
     MAX_TITLE_LENGTH = 200
     STATUS_CHOICES = (
-        ("T", "Trash"),  # 삭제된 글
-        ("P", "Published"),  # 등록된 글
-        ("D", "Draft"),  # 임시 글
-        ("A", "Admin"),  # 관리자용 글
+        ('T', 'Trash'),  # 삭제된 글
+        ('P', 'Published'),  # 등록된 글
+        ('D', 'Draft'),  # 임시 글
+        ('A', 'Admin'),  # 관리자용 글
     )
     author = models.ForeignKey(
-        User, verbose_name="글쓴이", on_delete=models.SET, related_name="questions", null=True
+        User,
+        verbose_name="글쓴이",
+        on_delete=models.SET,
+        related_name="questions",
+        null=True
     )  # 글쓴이
-    title = models.CharField(verbose_name="제목", max_length=MAX_TITLE_LENGTH)  # 제목
-    content = models.TextField(verbose_name="내용")  # 내용
+    title = models.CharField(
+        verbose_name="제목",
+        max_length=MAX_TITLE_LENGTH
+    )  # 제목
+    content = models.TextField(
+        verbose_name="내용"
+    )  # 내용
     status = models.CharField(
         verbose_name="게시 상태", default="P", max_length=2, choices=STATUS_CHOICES
     )  # 게시 상태
@@ -65,10 +74,10 @@ class Comment(BaseModel):
     """답변 클래스"""
 
     STATUS_CHOICES = (
-        ("T", "Trash"),  # 삭제된 글
-        ("P", "Published"),  # 등록된 글
-        ("D", "Draft"),  # 임시 글
-        ("A", "Admin"),  # 관리자용 글
+        ('T', 'Trash'),  # 삭제된 글
+        ('P', 'Published'),  # 등록된 글
+        ('D', 'Draft'),  # 임시 글
+        ('A', 'Admin'),  # 관리자용 글
     )
 
     author = models.ForeignKey(
