@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class Univerisity(models.Model):
+class University(models.Model):
     """대학교 모델<br>
 
     나중에 다른 대학까지 퍼질 가능성을 열어두고 만든 모델
@@ -21,12 +21,13 @@ class User(AbstractUser):
     2. University 모델과 forienkey 연결
     """
     name = models.CharField(max_length=20, verbose_name = "이름")
-    univerisity = models.ForeignKey(
-        Univerisity,
+    university = models.ForeignKey(
+        University,
         verbose_name ="대학",
         on_delete=models.CASCADE,
         null=True,
         blank=True,
+        related_name= 'user',
     )
     total_point = models.PositiveIntegerField(
         verbose_name="총점수",
