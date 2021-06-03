@@ -107,6 +107,12 @@ class Comment(BaseModel):
     status = models.CharField(
         verbose_name="게시 상태", default=0, max_length=2, choices=STATUS_CHOICES
     )  # 게시 상태
+    liked_count = models.PositiveIntegerField(
+        verbose_name="좋아요 수", default=0, null=False, blank=True
+    )  # 좋아요 수
+    disliked_count = models.PositiveIntegerField(
+        verbose_name="싫어요 수", default=0, null=False, blank=True
+    )  # 싫어요 수
 
     def __str__(self):
         # 답글인 경우
