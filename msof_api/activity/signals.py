@@ -59,10 +59,11 @@ def selected_comment_activity(sender, **kwargs):
 
 # pylint: disable=W0702
 @receiver(pre_save, sender=Perform)
-def create_like_activity(sender, **kwargs):
+def create_like_activity_and_reset_liked_count(sender, **kwargs):
     """like 관련 Activity
     question가 like되었을 때 activity를 생성합니다.
     comment가 like되었을 때 activity를 생성합니다.
+    liked_count 수를 갱신합니다.
     """
     comment_type = ContentType.objects.get_for_model(Comment)
     question_type = ContentType.objects.get_for_model(Question)
@@ -77,33 +78,100 @@ def create_like_activity(sender, **kwargs):
     performed_id = instance.performed_id
     user = performed_type.get_object_for_this_type(id=performed_id).author
 
+    # 좋아요를 눌렀을 때
     if category == PerformCategoryChoice.LIKE and prev_category != PerformCategoryChoice.LIKE:
         try:
             if performed_type == comment_type:
                 create_like_activity_and_reset_user_total_point(
                     user=user, rule_name=Action.LIKED_COMMENT
                 )
+                comment_object = performed_type.get_object_for_this_type(pk=performed_id)
+                comment_object.liked_count += 1
+                comment_object.save()
 
             if performed_type == question_type:
                 create_like_activity_and_reset_user_total_point(
                     user=user, rule_name=Action.LIKED_QUESTION
                 )
+                question_object = performed_type.get_object_for_this_type(pk=performed_id)
+                question_object.liked_count += 1
+                question_object.save()
 
         except Exception as e:
             print(e)
             return
 
+    # 좋아요를 취소했을 때
     elif category != PerformCategoryChoice.LIKE and prev_category == PerformCategoryChoice.LIKE:
         try:
             if performed_type == comment_type:
                 create_like_activity_and_reset_user_total_point(
                     user=user, rule_name=Action.CANCEL_LIKED_COMMENT
                 )
+                comment_object = performed_type.get_object_for_this_type(pk=performed_id)
+                comment_object.liked_count -= 1
+                comment_object.save()
 
             if performed_type == question_type:
                 create_like_activity_and_reset_user_total_point(
                     user=user, rule_name=Action.CANCEL_LIKED_QUESTION
                 )
+                question_object = performed_type.get_object_for_this_type(pk=performed_id)
+                question_object.liked_count -= 1
+                question_object.save()
+
+        except Exception as e:
+            print(e)
+            return
+
+
+@receiver(pre_save, sender=Perform)
+def reset_disliked_count(sender, **kwargs):
+    """disliked_count 수를 갱신합니다."""
+    comment_type = ContentType.objects.get_for_model(Comment)
+    question_type = ContentType.objects.get_for_model(Question)
+
+    instance = kwargs["instance"]
+    category = instance.category
+
+    prev_instacne = Perform.objects.filter(id=instance.id).first()
+    prev_category = prev_instacne.category if prev_instacne else "None"
+
+    performed_type = instance.performed_type
+    performed_id = instance.performed_id
+
+    # 싫어요를 눌렀을 때
+    if category == PerformCategoryChoice.DISLIKE and prev_category != PerformCategoryChoice.DISLIKE:
+        try:
+            if performed_type == comment_type:
+                comment_object = performed_type.get_object_for_this_type(pk=performed_id)
+                comment_object.disliked_count += 1
+                comment_object.save()
+
+            if performed_type == question_type:
+                question_object = performed_type.get_object_for_this_type(pk=performed_id)
+                question_object.disliked_count += 1
+                question_object.save()
+
+        except Exception as e:
+            print(e)
+            return
+
+    # 싫어요를 취소했을 때
+    elif (
+            category != PerformCategoryChoice.DISLIKE and
+            prev_category == PerformCategoryChoice.DISLIKE
+        ):
+        try:
+            if performed_type == comment_type:
+                comment_object = performed_type.get_object_for_this_type(pk=performed_id)
+                comment_object.disliked_count -= 1
+                comment_object.save()
+
+            if performed_type == question_type:
+                question_object = performed_type.get_object_for_this_type(pk=performed_id)
+                question_object.disliked_count -= 1
+                question_object.save()
 
         except Exception as e:
             print(e)
