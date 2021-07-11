@@ -52,7 +52,7 @@ class QuestionShowView(RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         """GET: /question/<int:id>/"""
         try:
-            question = model_to_dict(Question.objects.get(pk=kwargs['id']))
+            question = Question.objects.published().filter(pk=kwargs['id']).values()[0]
             status_code = status.HTTP_200_OK
             response = {
                 'success': 'true',

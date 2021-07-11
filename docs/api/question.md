@@ -63,11 +63,13 @@ Content-Type application/json
     "status code": 200,
     "message": "Question feteched successfully",
     "data": {
-        "id": 4,
+        "id": 1,
+        "created_at": "2021-05-19T09:31:12.156778Z",
+        "updated_at": "2021-05-19T09:31:12.156812Z",
         "deleted_at": null,
-        "author": 1,
-        "title": "aaaaa",
-        "content": "sasdqivelqwe",
+        "author_id": 1,
+        "title": "질문 제목",
+        "content": "질문 내용",
         "status": "P"
     }
 }
