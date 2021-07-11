@@ -78,7 +78,7 @@ Content-Type application/json
 ## 질문 추가하기
 ### **Request**:
 
-`GET` `/question/:id/new/`
+`POST` `/question/:id/new/`
 
 Headers:
 
