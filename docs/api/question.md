@@ -107,6 +107,8 @@ Content-Type application/json
     "data": {
         "id": 12,
         "deleted_at": null,
+        "created_at": "2021-07-11T16:32:05.748209Z",
+        "updated_at": "2021-07-11T16:32:05.748239Z",
         "author": 3,
         "title": "질문 제목입니다.",
         "content": "질문 내용입니다.",

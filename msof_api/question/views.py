@@ -4,7 +4,6 @@ request에 따른 response를 처리하기 위한 모듈
 
 import json
 
-from django.forms.models import model_to_dict
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
@@ -91,7 +90,8 @@ class QuestionCreateView(CreateAPIView):
             question = Question(title=title, content=content)
             question.author = request.user
             question.save()
-            question = model_to_dict(question)
+            question = question.__dict__
+            del question['_state']
 
             status_code = status.HTTP_201_CREATED
             response = {
