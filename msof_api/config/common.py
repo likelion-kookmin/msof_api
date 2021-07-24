@@ -41,7 +41,7 @@ class Common(Configuration):
 
         # Your apps
         'accounts',
-        'msof_api.question',
+        'msof_api.questions',
         'msof_api.comments',
         'msof_api.action_trackings',
         'msof_api.perform',

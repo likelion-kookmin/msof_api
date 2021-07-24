@@ -2,7 +2,7 @@ from django.db import models
 
 from accounts.models import User
 from msof_api.base_model import BaseModel, BaseModelManager
-from msof_api.question.models import Question
+from msof_api.questions.models import Question
 
 
 class Comment(BaseModel):

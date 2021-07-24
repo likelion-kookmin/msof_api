@@ -9,7 +9,7 @@ from django.dispatch import receiver
 from msof_api.action_trackings.models import Action, ActionTracking
 from msof_api.comments.models import Comment
 from msof_api.perform.models import Perform, PerformCategoryChoice
-from msof_api.question.models import Question
+from msof_api.questions.models import Question
 
 User = get_user_model()
 
