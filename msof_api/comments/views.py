@@ -10,7 +10,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from msof_api.action_trackings.models import ActionTracking
 
 from .models import Comment
-# from .permissions import QuestionEditableOrDestroyablePermission
+from .permissions import CommentEditableOrDestroyablePermission
 from .serializers import CommentSerializer
 
 
@@ -35,3 +35,43 @@ class CommentCreateView(CreateAPIView):
 
     def perform_create(self, serializer):
         return serializer.save(author = self.request.user)
+
+class CommentDetailView(RetrieveAPIView):
+    """
+        ## CommentDetailView
+    """
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    authentication_classes = [JSONWebTokenAuthentication, SessionAuthentication]
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+
+class CommentUpdateView(UpdateAPIView):
+    """
+        ## CommentUpdateView
+    """
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, CommentEditableOrDestroyablePermission]
+    authentication_classes = [JSONWebTokenAuthentication, SessionAuthentication]
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
+class CommentDestroyView(DestroyAPIView):
+    """
+        ## CommentDestroyView
+    """
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated, CommentEditableOrDestroyablePermission]
+    authentication_classes = [JSONWebTokenAuthentication, SessionAuthentication]
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
