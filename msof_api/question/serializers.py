@@ -16,18 +16,12 @@ class QuestionSerializer(ModelSerializer):
         """### QuestionSerializer.Meta"""
         model = Question
         fields = '__all__'
-
-class QuestionWriteSerializer(ModelSerializer):
-    """
-        ## QuestionWriteSerializer
-
-        사용자가 입력할 수 있는 정보와 관련된 Serializer입니다.
-    """
-    class Meta:
-        """### QuestionWriteSerializer.Meta"""
-        model = Question
-        fields = [
-            'id',
-            'title',
-            'content'
+        read_only_fields = [
+            'author',
+            'viewed_count',
+            'liked_count',
+            'disliked_count',
+            'created_at',
+            'updated_at',
+            'deleted_at',
         ]

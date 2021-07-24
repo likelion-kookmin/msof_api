@@ -15,7 +15,7 @@ from msof_api.action_trackings.models import ActionTracking
 
 from .models import Question
 from .permissions import QuestionEditableOrDestroyablePermission
-from .serializers import QuestionSerializer, QuestionWriteSerializer
+from .serializers import QuestionSerializer
 
 
 class QuestionListView(ListAPIView):
@@ -48,8 +48,7 @@ class QuestionCreateView(CreateAPIView):
     """
         ## QuestionCreateView
     """
-    queryset = Question.objects.published()
-    serializer_class = QuestionWriteSerializer
+    serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [JSONWebTokenAuthentication, SessionAuthentication]
 
@@ -64,7 +63,7 @@ class QuestionUpdateView(UpdateAPIView):
         ## QuestionUpdateView
     """
     queryset = Question.objects.all()
-    serializer_class = QuestionWriteSerializer
+    serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, QuestionEditableOrDestroyablePermission]
     authentication_classes = [JSONWebTokenAuthentication, SessionAuthentication]
 
@@ -79,7 +78,7 @@ class QuestionDestroyView(DestroyAPIView):
         ## QuestionDestroyView
     """
     queryset = Question.objects.all()
-    serializer_class = QuestionWriteSerializer
+    serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated, QuestionEditableOrDestroyablePermission]
     authentication_classes = [JSONWebTokenAuthentication, SessionAuthentication]
 
