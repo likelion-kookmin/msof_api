@@ -8,10 +8,12 @@ class JSONResponseRenderer(JSONRenderer):
     charset = 'utf-8'
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
+        status_code = renderer_context['response'].status_code
+        success = str(status_code)[0:2] == '20'
 
         response_dict = {
-            'success': True,
-            'status code': 200,
+            'success': success,
+            'status code': status_code,
             'data': data['results'] if 'results' in data else data,
             'message': '',
         }
