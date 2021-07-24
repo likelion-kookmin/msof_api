@@ -35,6 +35,7 @@ class Common(Configuration):
         'allauth.account',
         'allauth.socialaccount',
         'rest_auth.registration',
+        'drf_yasg',
 
         # Your apps
         'accounts',
