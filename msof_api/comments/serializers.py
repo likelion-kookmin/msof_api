@@ -1,30 +1,26 @@
 """
-    # Question Serializers
+    # Comment Serializers
 """
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from msof_api.comments.models import Comment
-from msof_api.comments.serializers import CommentSerializer
-
-from .models import Question
+from .models import Comment
 
 
-class QuestionSerializer(ModelSerializer):
+class CommentSerializer(ModelSerializer):
     """
-        ## QuestionSerializer
+        ## CommentSerializer
 
         기본적으로 모든 정보를 보여주는 Serializer입니다.
     """
-    comments = serializers.SerializerMethodField()
+    re_comments = serializers.SerializerMethodField()
 
     class Meta:
-        """### QuestionSerializer.Meta"""
-        model = Question
+        """### CommentSerializer.Meta"""
+        model = Comment
         fields = '__all__'
         read_only_fields = [
             'author',
-            'viewed_count',
             'liked_count',
             'disliked_count',
             'created_at',
@@ -32,7 +28,9 @@ class QuestionSerializer(ModelSerializer):
             'deleted_at',
         ]
 
-    def get_comments(self, obj):
-        comments = Comment.objects.filter(question=obj, parent=None)
+    def get_re_comments(self, obj):
+        comments = Comment.objects.filter(parent=obj)
         serializers = CommentSerializer(comments, many=True)
         return serializers.data
+
+# TODO: selected는 author만 수정 가능하도록 하기
