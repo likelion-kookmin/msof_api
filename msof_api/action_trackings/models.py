@@ -89,6 +89,9 @@ class ActionTracking(BaseModel):
 
     @classmethod
     def create_user_action_tracking(cls, user, rule_name, actionable=None):
+        if not user.is_authenticated:
+            return
+
         rule = PointRule.objects.get_or_create(name=rule_name)[0]
         if actionable:
             actionable_type = ContentType.objects.get_for_model(actionable)
@@ -102,6 +105,10 @@ class ActionTracking(BaseModel):
                 action_tracking_obj.count += 1
         else:
             cls.objects.create(user=user, point_rule=rule)
+
+    @classmethod
+    def create_show_question_action_tracking(cls, user, actionable):
+        cls.create_user_action_tracking(user, Action.SHOW_QUESTION, actionable)
 
     @classmethod
     def total_viewed_count(cls, viewed_obj):

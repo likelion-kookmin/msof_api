@@ -11,6 +11,8 @@ from rest_framework.generics import (CreateAPIView, DestroyAPIView,
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
+from msof_api.action_trackings.models import ActionTracking
+
 from .models import Question
 from .permissions import QuestionEditableOrDestroyablePermission
 from .serializers import QuestionSerializer, QuestionWriteSerializer
@@ -35,6 +37,10 @@ class QuestionDetailView(RetrieveAPIView):
     authentication_classes = [JSONWebTokenAuthentication, SessionAuthentication]
 
     def get(self, request, *args, **kwargs):
+        ActionTracking.create_show_question_action_tracking(
+            user=request.user,
+            actionable=Question.objects.published().filter(pk=kwargs['pk']).first()
+        )
         return self.retrieve(request, *args, **kwargs)
 
 
