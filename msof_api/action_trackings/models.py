@@ -103,6 +103,7 @@ class ActionTracking(BaseModel):
             )
             if not created and rule_name in cls.ACTION_RELATED_HISTORY:
                 action_tracking_obj.count += 1
+                action_tracking_obj.save()
         else:
             cls.objects.create(user=user, point_rule=rule)
 
