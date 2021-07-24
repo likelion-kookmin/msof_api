@@ -14,7 +14,7 @@ from msof_api.question.models import Question
 User = get_user_model()
 
 # pylint: disable=W0613
-@receiver(pre_save, sender=Question)
+@receiver(post_save, sender=Question)
 def create_question_action_tracking(sender, **kwargs):
     """ ## create_question_action_tracking
         - add_question action을 tracking합니다.
@@ -23,10 +23,14 @@ def create_question_action_tracking(sender, **kwargs):
 
     user = instance.author
 
-    if instance.id is not None:
+    if not kwargs["created"]:
         return
 
-    create_like_action_tracking_and_reset_user_total_point(user=user, rule_name=Action.ADD_QUESTION)
+    ActionTracking.create_user_action_tracking(
+        user=user,
+        rule_name=Action.ADD_QUESTION,
+        actionable=instance
+    )
 
 
 @receiver(post_save, sender=User)
@@ -39,10 +43,13 @@ def create_user_action_tracking(sender, **kwargs):
     if not kwargs["created"]:
         return
 
-    create_like_action_tracking_and_reset_user_total_point(user=user, rule_name=Action.SIGNUP)
+    ActionTracking.create_user_action_tracking(
+        user=user,
+        rule_name=Action.SIGNUP
+    )
 
 
-@receiver(pre_save, sender=Comment)
+@receiver(post_save, sender=Comment)
 def selected_comment_action_tracking(sender, **kwargs):
     """## selected_comment_action_tracking
         - comment 가 selected 되었을 때를 트랙킹합니다.
@@ -53,11 +60,15 @@ def selected_comment_action_tracking(sender, **kwargs):
     question_user = instance.question.author
 
     if instance.selected and not Comment.objects.get(id=instance.id).selected:
-        create_like_action_tracking_and_reset_user_total_point(
-            user=comment_user, rule_name=Action.SELECTED_COMMENT
+        ActionTracking.create_user_action_tracking(
+            user=comment_user,
+            rule_name=Action.SELECTED_COMMENT,
+            actionable=instance,
         )
-        create_like_action_tracking_and_reset_user_total_point(
-            user=question_user, rule_name=Action.SELECT_COMMENT
+        ActionTracking.create_user_action_tracking(
+            user=question_user,
+            rule_name=Action.SELECT_COMMENT,
+            actionable=instance,
         )
 
     else:
@@ -67,9 +78,9 @@ def selected_comment_action_tracking(sender, **kwargs):
 # pylint: disable=W0702
 @receiver(pre_save, sender=Perform)
 def create_like_action_tracking(sender, **kwargs):
-    """like 관련 action_tracking
-    question가 like되었을 때 action_tracking를 생성합니다.
-    comment가 like되었을 때 action_tracking를 생성합니다.
+    """## like 관련 action_tracking
+        - question가 like되었을 때 action_tracking를 생성합니다.
+        - comment가 like되었을 때 action_tracking를 생성합니다.
     """
     comment_type = ContentType.objects.get_for_model(Comment)
     question_type = ContentType.objects.get_for_model(Question)
@@ -82,18 +93,23 @@ def create_like_action_tracking(sender, **kwargs):
 
     performed_type = instance.performed_type
     performed_id = instance.performed_id
-    user = performed_type.get_object_for_this_type(id=performed_id).author
+    performed_obj = performed_type.get_object_for_this_type(id=performed_id)
+    user = performed_obj.author
 
     if category == PerformCategoryChoice.LIKE and prev_category != PerformCategoryChoice.LIKE:
         try:
             if performed_type == comment_type:
-                create_like_action_tracking_and_reset_user_total_point(
-                    user=user, rule_name=Action.LIKED_COMMENT
+                ActionTracking.create_user_action_tracking(
+                    user=user,
+                    rule_name=Action.LIKED_COMMENT,
+                    actionable=performed_obj,
                 )
 
             if performed_type == question_type:
-                create_like_action_tracking_and_reset_user_total_point(
-                    user=user, rule_name=Action.LIKED_QUESTION
+                ActionTracking.create_user_action_tracking(
+                    user=user,
+                    rule_name=Action.LIKED_QUESTION,
+                    actionable=performed_obj,
                 )
 
         except Exception as e:
@@ -103,23 +119,19 @@ def create_like_action_tracking(sender, **kwargs):
     elif category != PerformCategoryChoice.LIKE and prev_category == PerformCategoryChoice.LIKE:
         try:
             if performed_type == comment_type:
-                create_like_action_tracking_and_reset_user_total_point(
-                    user=user, rule_name=Action.CANCEL_LIKED_COMMENT
+                ActionTracking.create_user_action_tracking(
+                    user=user,
+                    rule_name=Action.CANCEL_LIKED_COMMENT,
+                    actionable=performed_obj,
                 )
 
             if performed_type == question_type:
-                create_like_action_tracking_and_reset_user_total_point(
-                    user=user, rule_name=Action.CANCEL_LIKED_QUESTION
+                ActionTracking.create_user_action_tracking(
+                    user=user,
+                    rule_name=Action.CANCEL_LIKED_QUESTION,
+                    actionable=performed_obj,
                 )
 
         except Exception as e:
             print(e)
             return
-
-
-def create_like_action_tracking_and_reset_user_total_point(user, rule_name):
-    """action_tracking 생성 및 user total_point 재설정"""
-    rule = PointRule.objects.get_or_create(name=rule_name)[0]
-    action_tracking = ActionTracking.objects.create(user=user, point_rule=rule)
-    user.total_point += action_tracking.point_rule.point
-    user.save()

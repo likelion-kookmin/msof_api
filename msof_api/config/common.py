@@ -1,5 +1,6 @@
 """msof_api setting 파일"""
 import datetime
+import logging.config
 import os
 from distutils.util import strtobool
 from os.path import join
@@ -43,7 +44,6 @@ class Common(Configuration):
         'msof_api.comments',
         'msof_api.action_trackings',
         'msof_api.perform',
-        'msof_api.history',
     )
     AUTHENTICATION_BACKENDS = [
         # Needed to login by username in Django admin, regardless of `allauth`
@@ -241,6 +241,23 @@ class Common(Configuration):
         'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),
         # JWT_REFRESH_EXPIRATION_DELTA : JWT 토큰의 갱신 유효기간
     }
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler'
+            },
+        },
+        'loggers': {
+            '': {  # 'catch all' loggers by referencing it with the empty string
+                'handlers': ['console'],
+                'level': 'DEBUG',
+            },
+        },
+    }
+    logging.config.dictConfig(LOGGING)
+
 
     def __init__(self):
         super()

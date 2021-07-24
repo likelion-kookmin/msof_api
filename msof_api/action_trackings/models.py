@@ -5,24 +5,32 @@
     - ActionTracking: 사용자 트래킹 액션
     - PointRule: 액션에 따라 정해진 포인트(점수) 규칙
 """
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.db.models import Sum
 from django.utils.translation import gettext_lazy as _
 
 from accounts.models import User
+from msof_api import action_trackings
 from msof_api.base_model import BaseModel
 
 
 class Action(models.TextChoices):
     """행동을 정의해놓은 클래스"""
 
+    SIGNUP = "회원가입", _("signup")
+
     ADD_QUESTION = "질문 등록", _("register_question")
+    LIKED_QUESTION = "좋아요 받은 질문", _("liked_question")
+    CANCEL_LIKED_QUESTION = "질문에 대한 좋아요 취소", _("cancle_liked_question")
+
+    SHOW_QUESTION = "질문 조회", _("show_question")
+
+    LIKED_COMMENT = "좋아요 받은 댓글", _("liked_comment")
     SELECT_COMMENT = "댓글 채택", _("select_comment")
     SELECTED_COMMENT = "채택받은 댓글", _("selected_comment")
-    SIGNUP = "회원가입", _("signup")
-    LIKED_COMMENT = "좋아요받은 댓글", _("liked_comment")
-    LIKED_QUESTION = "좋아요받은 질문", _("liked_question")
     CANCEL_LIKED_COMMENT = "댓글에 대한 좋아요 취소", _("cancle_liked_comment")
-    CANCEL_LIKED_QUESTION = "질문에 대한 좋아요 취소", _("cancle_liked_question")
 
 
 class PointRule(BaseModel):
@@ -39,12 +47,34 @@ class PointRule(BaseModel):
 
 class ActionTracking(BaseModel):
     """사용자의 행동을 기록하는 모델"""
+    ACTION_RELATED_HISTORY = [Action.SHOW_QUESTION]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="유저")
     point_rule = models.ForeignKey(PointRule, on_delete=models.CASCADE, verbose_name="규칙")
 
+    actionable_type = models.ForeignKey(
+        ContentType,
+        verbose_name="액션 관련 모델",
+        on_delete=models.CASCADE,
+        null=True,
+    )
+    actionable_id = models.PositiveIntegerField(
+        verbose_name="액션 관련 객체 id",
+        null=True,
+    )
+    actionable = GenericForeignKey(
+        'actionable_type',
+        'actionable_id',
+    )
+    count = models.IntegerField(
+        verbose_name="액션 횟수",  # 조회수에만 사용할 것
+        null=False,
+        blank=False,
+        default=1,
+    )
 
     def __str__(self):
+        # pylint: disable=E1101
         return "{0}님이 {1} 행동을 통해 {2}점을 얻었습니다.{3}/{4}".format(
             self.user.username,
             self.point_rule.name,
@@ -52,3 +82,61 @@ class ActionTracking(BaseModel):
             self.created_at,
             self.updated_at,
         )
+
+    @property
+    def viewed_at(self):
+        return self.created_at
+
+    @classmethod
+    def create_user_action_tracking(cls, user, rule_name, actionable=None):
+        rule = PointRule.objects.get_or_create(name=rule_name)[0]
+        if actionable:
+            actionable_type = ContentType.objects.get_for_model(actionable)
+            action_tracking_obj, created = cls.objects.get_or_create(
+                user = user,
+                point_rule = rule,
+                actionable_type = actionable_type,
+                actionable_id = actionable.id
+            )
+            if not created and rule_name in cls.ACTION_RELATED_HISTORY:
+                action_tracking_obj.count += 1
+        else:
+            cls.objects.create(user=user, point_rule=rule)
+
+    @classmethod
+    def total_viewed_count(cls, viewed_obj):
+        """# total_viewed_count
+
+        특정 객체의 전체 조회수를 리턴하는 메서드입니다.
+
+        ## params
+
+        viewed_obj: 전체 조회수를 조회하려는 레코드 객체
+        """
+        viewed_type_obj = ContentType.objects.get_for_model(viewed_obj)
+        total_count = ActionTracking.objects.filter(
+            actionable_type=viewed_type_obj,
+            actionable_id=viewed_obj.id,
+            point_rule__name=Action.SHOW_QUESTION,
+        ).aggregate(Sum("count"))
+
+        return total_count
+
+    @classmethod
+    def total_viewed_user_count(cls, viewed_obj):
+        """# total_viewed_user_count
+
+        특정 객체를 조회한 유저 수를 리턴하는 메서드입니다.
+
+        ## params
+
+        viewed_obj: 전체 조회수를 조회하려는 레코드 객체
+        """
+        viewed_type_obj = ContentType.objects.get_for_model(viewed_obj)
+        total_count = ActionTracking.objects.filter(
+            actionable_type=viewed_type_obj,
+            actionable_id=viewed_obj.id,
+            point_rule__name=Action.SHOW_QUESTION,
+        ).count()
+
+        return total_count

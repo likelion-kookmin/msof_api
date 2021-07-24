@@ -3,7 +3,8 @@ from django.apps import AppConfig
 
 
 class AccountsConfig(AppConfig):
-    """appconfig class
-    name을 통해 setting에 등록 가능
-    """
+    """accounts 기본 설정 클래스"""
     name = 'accounts'
+
+    def ready(self):
+        import accounts.signals

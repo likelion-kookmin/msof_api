@@ -1,4 +1,4 @@
-"""action_trackings App"""
+"""action_trackings appconfig 모듈"""
 from django.apps import AppConfig
 
 
@@ -7,6 +7,5 @@ class ActionTrackingConfig(AppConfig):
 
     name = "msof_api.action_trackings"
 
-    # pylint: disable=W0611, C0415
     def ready(self):
         import msof_api.action_trackings.signals

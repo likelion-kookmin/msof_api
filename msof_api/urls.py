@@ -12,7 +12,7 @@ schema_view = get_schema_view(
       title="MSOF API",
       default_version='v1',
       description="API description",
-      terms_of_service="https://www.google.com/policies/terms/",
+    #   terms_of_service="https://www.google.com/policies/terms/",
     #   contact=openapi.Contact(email="contact@snippets.local"),
     #   license=openapi.License(name="BSD License"),
    ),
