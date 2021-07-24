@@ -5,8 +5,9 @@ from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 from msof_api.activity.models import Action, Activity, PointRule
+from msof_api.comments.models import Comment
 from msof_api.perform.models import Perform, PerformCategoryChoice
-from msof_api.question.models import Comment, Question
+from msof_api.question.models import Question
 
 User = get_user_model()
 
