@@ -14,6 +14,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 class Common(Configuration):
     """Configuration을 상속 받는 Common 설정 클래스"""
 
+
     INSTALLED_APPS = (
         # General use templates & template tags (should appear first)
         'adminlte3',
@@ -216,6 +217,7 @@ class Common(Configuration):
         'PAGE_SIZE': int(os.getenv('DJANGO_PAGINATION_LIMIT', '10')),
         'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%S%z',
         'DEFAULT_RENDERER_CLASSES': (
+            'msof_api.renderer.JSONResponseRenderer',
             'rest_framework.renderers.JSONRenderer',
             'rest_framework.renderers.BrowsableAPIRenderer',
         ),
