@@ -1,4 +1,10 @@
-"""사용자의 Activity(행동) 및 PointRule(행동에 따른 점수)을 기록하는 모델을 정의"""
+"""
+    # action_trackings models
+
+    - Action : 사전에 정의된 트래킹되는 액션
+    - ActionTracking: 사용자 트래킹 액션
+    - PointRule: 액션에 따라 정해진 포인트(점수) 규칙
+"""
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -19,7 +25,6 @@ class Action(models.TextChoices):
     CANCEL_LIKED_QUESTION = "질문에 대한 좋아요 취소", _("cancle_liked_question")
 
 
-# pylint: disable=fixme
 class PointRule(BaseModel):
     """행동에 따른 점수를 정하는 모델"""
 
@@ -32,15 +37,14 @@ class PointRule(BaseModel):
         return str(self.name)
 
 
-class Activity(BaseModel):
+class ActionTracking(BaseModel):
     """사용자의 행동을 기록하는 모델"""
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="유저")
     point_rule = models.ForeignKey(PointRule, on_delete=models.CASCADE, verbose_name="규칙")
 
-    # pylint: disable=fixme
+
     def __str__(self):
-        # pylint: disable=E1101
         return "{0}님이 {1} 행동을 통해 {2}점을 얻었습니다.{3}/{4}".format(
             self.user.username,
             self.point_rule.name,
