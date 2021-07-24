@@ -8,13 +8,17 @@ class JSONResponseRenderer(JSONRenderer):
     charset = 'utf-8'
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
+
         response_dict = {
             'success': True,
             'status code': 200,
-            'next': data['next'] if 'next' in data else None,
-            'previous': data['previous'] if 'previous' in data else None,
             'data': data['results'] if 'results' in data else data,
             'message': '',
         }
+        if 'next' in data:
+            response_dict['next'] = data['next']
+        if 'previous' in data:
+            response_dict['previous'] = data['previous']
+
         data = response_dict
         return json.dumps(data)
