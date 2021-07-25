@@ -76,7 +76,6 @@ pexpect==4.8.0
 pickleshare==0.7.5
 pre-commit==2.12.0
 prompt-toolkit==3.0.17
-psycopg2==2.8.6
 psycopg2-binary==2.8.6
 ptyprocess==0.7.0
 pycodestyle==2.7.0
