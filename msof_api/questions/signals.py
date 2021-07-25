@@ -14,6 +14,9 @@ def reset_question_viewed_count(sender, **kwargs):
     instance = kwargs["instance"]  # class: ActionTracking
     prev_instance = ActionTracking.objects.filter(pk=instance.id).first()
 
+    if not instance.actionable_type:
+        return
+
     viewed_model = instance.actionable_type.model_class()
     viewed_id = instance.actionable_id
 
