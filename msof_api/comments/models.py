@@ -1,12 +1,17 @@
+"""# comments models
+    - Comment: 답변/댓글
+"""
 from django.db import models
 
 from accounts.models import User
-from msof_api.base_model import BaseModel, BaseModelManager
+from msof_api.base_model import BaseModel
 from msof_api.questions.models import Question
 
 
 class Comment(BaseModel):
-    """답변 클래스"""
+    """## Comment
+        - 답변 클래스
+    """
 
     STATUS_CHOICES = (
         ('T', 'Trash'),  # 삭제된 글
@@ -60,6 +65,8 @@ class Comment(BaseModel):
         return f"{self.question}에 답변한 글"
 
     def select(self):
-        """채택: self.selected를 true로 설정"""
+        """### select
+            - 채택: self.selected를 true로 설정
+        """
         self.selected = True
         self.save()

@@ -1,6 +1,4 @@
-"""
-    # Comment Serializers
-"""
+"""# comment serializers"""
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
@@ -8,10 +6,8 @@ from .models import Comment
 
 
 class CommentSerializer(ModelSerializer):
-    """
-        ## CommentSerializer
-
-        기본적으로 모든 정보를 보여주는 Serializer입니다.
+    """## CommentSerializer
+        - Comment model serializer입니다.
     """
     re_comments = serializers.SerializerMethodField()
 
@@ -29,8 +25,11 @@ class CommentSerializer(ModelSerializer):
         ]
 
     def get_re_comments(self, obj):
+        """### get_re_comments
+            - 대댓글 데이터가 담겨 내려가도록 하였습니다.
+        """
         comments = Comment.objects.filter(parent=obj)
-        serializers = CommentSerializer(comments, many=True)
-        return serializers.data
+        comment_serializers = CommentSerializer(comments, many=True)
+        return comment_serializers.data
 
 # TODO: selected는 author만 수정 가능하도록 하기

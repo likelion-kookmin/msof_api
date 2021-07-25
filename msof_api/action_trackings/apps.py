@@ -1,9 +1,9 @@
-"""action_trackings appconfig 모듈"""
+"""# action_trackings apps"""
 from django.apps import AppConfig
 
 
 class ActionTrackingConfig(AppConfig):
-    """action_trackings 기본 설정 클래스"""
+    """## action_trackings 기본 설정 클래스"""
 
     name = "msof_api.action_trackings"
 

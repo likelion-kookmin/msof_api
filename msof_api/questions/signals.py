@@ -1,3 +1,4 @@
+"""# questions signals"""
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
@@ -7,7 +8,9 @@ from msof_api.questions.models import Question
 
 @receiver(pre_save, sender=ActionTracking)
 def reset_question_viewed_count(sender, **kwargs):
-    """질문의 viewed_count를 재설정합니다."""
+    """ # reset_question_viewed_count
+        - 질문의 viewed_count를 재설정합니다.
+    """
     instance = kwargs["instance"]  # class: ActionTracking
     prev_instance = ActionTracking.objects.filter(pk=instance.id).first()
 

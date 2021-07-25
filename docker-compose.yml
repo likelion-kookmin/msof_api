@@ -20,11 +20,3 @@ services:
       - "80:8333"
     depends_on:
       - postgres
-  documentation:
-    <<: *web
-    restart: always
-    command: "mkdocs serve"
-    volumes:
-      - ./:/code
-    ports:
-      - "8334:8334"

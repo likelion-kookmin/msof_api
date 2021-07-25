@@ -1,8 +1,4 @@
-"""
-    # Quesion Views
-
-    request에 따른 response를 처리하기 위한 모듈
-"""
+"""questions views"""
 
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
@@ -19,8 +15,9 @@ from .serializers import QuestionSerializer
 
 
 class QuestionListView(ListAPIView):
-    """
-        ## QuestionListView
+    """## QuestionListView
+        - Questions#index
+        - 모든 질문이 반환됩니다.
     """
     queryset = Question.objects.published()
     serializer_class = QuestionSerializer
@@ -29,8 +26,9 @@ class QuestionListView(ListAPIView):
         return self.list(request, *args, **kwargs)
 
 class QuestionDetailView(RetrieveAPIView):
-    """
-        ## QuestionDetailView
+    """## QuestionDetailView
+        - Questions#show
+        - 특정 질문을 반환합니다.
     """
     queryset = Question.objects.published()
     serializer_class = QuestionSerializer
@@ -45,8 +43,9 @@ class QuestionDetailView(RetrieveAPIView):
 
 
 class QuestionCreateView(CreateAPIView):
-    """
-        ## QuestionCreateView
+    """## QuestionCreateView
+        - Questions#new
+        - 질문을 생성합니다.
     """
     serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated]
@@ -59,8 +58,9 @@ class QuestionCreateView(CreateAPIView):
         return self.create(request, *args, **kwargs)
 
 class QuestionUpdateView(UpdateAPIView):
-    """
-        ## QuestionUpdateView
+    """## QuestionUpdateView
+        - Questions#edit
+        - 특정 질문을 수정합니다.
     """
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
@@ -74,8 +74,9 @@ class QuestionUpdateView(UpdateAPIView):
         return self.partial_update(request, *args, **kwargs)
 
 class QuestionDestroyView(DestroyAPIView):
-    """
-        ## QuestionDestroyView
+    """## QuestionDestroyView
+        - Questions#destroy
+        - 특정 질문을 삭제합니다.
     """
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer

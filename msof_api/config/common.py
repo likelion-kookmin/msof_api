@@ -220,7 +220,7 @@ class Common(Configuration):
         'PAGE_SIZE': int(os.getenv('DJANGO_PAGINATION_LIMIT', '10')),
         'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%S%z',
         'DEFAULT_RENDERER_CLASSES': (
-            'msof_api.renderer.JSONResponseRenderer',
+            # 'msof_api.renderer.JSONResponseRenderer',
             'rest_framework.renderers.JSONRenderer',
             'rest_framework.renderers.BrowsableAPIRenderer',
         ),

@@ -1,4 +1,4 @@
-"""Comment App url 라우터 등록"""
+"""# comments urls"""
 
 from django.urls import path
 

@@ -1,4 +1,6 @@
-"""admin 페이지에서 관리할 모델 추가 및 정의 설정 파일"""
+"""# comments admin
+- CommentAdmin
+"""
 from django.contrib import admin
 
 from .models import Comment
@@ -6,4 +8,40 @@ from .models import Comment
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    """Admin에서 설정할 Question 정의"""
+    """## CommentAdmin
+        - admin에서 관리할 Comment 모델 설정
+    """
+
+    list_display = [
+        'author',
+        'question',
+        'parent',
+        'selected',
+        'content',
+        'status',
+        'liked_count',
+        'disliked_count',
+    ]
+
+    list_editable = [
+        'status',
+    ]
+
+    list_filter = [
+        'author',
+        'question',
+        'parent',
+        'selected',
+        'status',
+    ]
+
+    search_fields = [
+        'content',
+        'author__name',
+        'question__title',
+        'question__content',
+    ]
+
+    ordering = [
+        '-updated_at',
+    ]

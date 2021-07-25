@@ -1,6 +1,4 @@
-"""
-    # action trackings signal module
-"""
+"""# action trackings signals"""
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_save, pre_save
@@ -13,7 +11,6 @@ from msof_api.questions.models import Question
 
 User = get_user_model()
 
-# pylint: disable=W0613
 @receiver(post_save, sender=Question)
 def create_question_action_tracking(sender, **kwargs):
     """ ## create_question_action_tracking
@@ -75,7 +72,6 @@ def selected_comment_action_tracking(sender, **kwargs):
         return
 
 
-# pylint: disable=W0702
 @receiver(pre_save, sender=Perform)
 def create_like_action_tracking(sender, **kwargs):
     """## like 관련 action_tracking

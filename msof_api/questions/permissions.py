@@ -1,19 +1,14 @@
-"""Question Permission Class Module"""
+"""# questions permissions"""
 from rest_framework import permissions
 
 
 class QuestionEditableOrDestroyablePermission(permissions.BasePermission):
-    """QuestionEditableOrDestroyablePermission<br>
-
-    Custom Permisson Class to allow owners and admin of an object to edit or destroy it.
+    """## QuestionEditableOrDestroyablePermission
+        - 질문을 수정 혹은 삭제할 수 있는 권한을 명시하는 클래스
     """
 
     def has_object_permission(self, request, view, obj):
-        """has_object_permission<br>
-
-        Read permissions are allowed to any request.
-        Write permissions are only allowed to the owner or staff.
-        """
+        """### has_object_permission"""
         if request.method in permissions.SAFE_METHODS:
             return True
 

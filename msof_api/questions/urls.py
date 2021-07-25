@@ -1,4 +1,4 @@
-"""Quetion App url 라우터 등록"""
+"""quetions urls"""
 
 from django.urls import path
 

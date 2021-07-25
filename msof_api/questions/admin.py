@@ -1,4 +1,4 @@
-"""admin 페이지에서 관리할 모델 추가 및 정의 설정 파일"""
+"""# questions admin"""
 from django.contrib import admin
 
 from .models import Question
@@ -6,4 +6,26 @@ from .models import Question
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    """Admin에서 설정할 Question 정의"""
+    """ ## QuestionAdmin
+        - admin에서 관리할 Question 모델 설정
+    """
+
+    list_display = [
+        'author',
+        'title',
+        'content',
+        'status',
+        'viewed_count',
+        'liked_count',
+        'disliked_count',
+    ]
+
+    list_editable = [
+        'status',
+    ]
+
+    search_fields = [
+        'author__name',
+        'title',
+        'content',
+    ]

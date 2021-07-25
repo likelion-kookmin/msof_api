@@ -22,7 +22,7 @@ repos:
         language: system
         types: [python]
         exclude: "[a-zA-Z]*/(migrations|tests)/(.)*"
-        args: ["--disable=R0903,C0103,W0703"]
+        args: ["--disable=R0903,C0103,W0703,E1101,E0401,W0613,C0415,W0511,R0201,W0611"]
   - repo: https://github.com/asottile/seed-isort-config
     rev: v2.2.0
     hooks:

@@ -1,4 +1,6 @@
-"""Question(질문 게시글)"""
+"""# questions models
+    - Question
+"""
 from django.db import models
 
 from accounts.models import User
@@ -6,29 +8,40 @@ from msof_api.base_model import BaseModel, BaseModelManager
 
 
 class QuestionQuerySet(models.QuerySet):
-    """QuestionQuerySet
-    Use like `Quesition.objects.published()`
+    """# QuestionQuerySet
+        - Quesion 모델의 커스텀 쿼리셋
+        - Use like `Quesition.objects.published()`
     """
 
     def published(self):
-        """등록된 질문만 리턴합니다."""
+        """## published
+            - 등록된 질문만 리턴합니다.
+        """
         return self.filter(status='P')
 
     def admin(self):
-        """관리자용 질문만 리턴합니다."""
+        """## admin
+            - 관리자용 질문만 리턴합니다.
+        """
         return self.filter(status='A')
 
     def recent_updated(self):
-        """최근 수정된 질문부터 리턴합니다."""
+        """## recent_updated
+            - 최근 수정된 질문부터 리턴합니다.
+        """
         return self.order_by("-updated_at")
 
     def recent_created(self):
-        """최근 생성된 질문부터 리턴합니다."""
+        """## recnet_creaeted
+            - 최근 생성된 질문부터 리턴합니다.
+        """
         return self.order_by("-created_at")
 
 
 class Question(BaseModel):
-    """질문 클래스"""
+    """## Question
+        - 질문 클래스
+    """
 
     objects = BaseModelManager.from_queryset(QuestionQuerySet)()
 

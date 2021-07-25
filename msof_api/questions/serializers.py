@@ -1,6 +1,4 @@
-"""
-    # Question Serializers
-"""
+"""# question serializers"""
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
@@ -11,10 +9,8 @@ from .models import Question
 
 
 class QuestionSerializer(ModelSerializer):
-    """
-        ## QuestionSerializer
-
-        기본적으로 모든 정보를 보여주는 Serializer입니다.
+    """## QuestionSerializer
+        - Question Model serializer입니다.
     """
     comments = serializers.SerializerMethodField()
 
@@ -33,6 +29,9 @@ class QuestionSerializer(ModelSerializer):
         ]
 
     def get_comments(self, obj):
+        """### get_comments
+            - 현재 글에 달린 상위(parent가 없는) 답변이 담겨 내려가도록 합니다.
+        """
         comments = Comment.objects.filter(question=obj, parent=None)
-        serializers = CommentSerializer(comments, many=True)
-        return serializers.data
+        comment_serializers = CommentSerializer(comments, many=True)
+        return comment_serializers.data
