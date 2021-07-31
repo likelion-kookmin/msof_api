@@ -1,5 +1,6 @@
 """msof_api setting 파일"""
 import datetime
+import logging.config
 import os
 from distutils.util import strtobool
 from os.path import join
@@ -12,6 +13,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class Common(Configuration):
     """Configuration을 상속 받는 Common 설정 클래스"""
+
 
     INSTALLED_APPS = (
         # General use templates & template tags (should appear first)
@@ -35,13 +37,14 @@ class Common(Configuration):
         'allauth.account',
         'allauth.socialaccount',
         'rest_auth.registration',
+        'drf_yasg',
 
         # Your apps
         'accounts',
-        'msof_api.question',
-        'msof_api.activity',
+        'msof_api.questions',
+        'msof_api.comments',
+        'msof_api.action_trackings',
         'msof_api.perform',
-        'msof_api.history',
     )
     AUTHENTICATION_BACKENDS = [
         # Needed to login by username in Django admin, regardless of `allauth`
@@ -208,12 +211,16 @@ class Common(Configuration):
     AUTH_USER_MODEL = 'accounts.User'
 
     REST_USE_JWT = True
+    SWAGGER_SETTINGS = {
+        'DEFAULT_INFO': 'msof_api.urls.openapi_info',
+    }
     # Django Rest Framework
     REST_FRAMEWORK = {
         'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
         'PAGE_SIZE': int(os.getenv('DJANGO_PAGINATION_LIMIT', '10')),
         'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%S%z',
         'DEFAULT_RENDERER_CLASSES': (
+            # 'msof_api.renderer.JSONResponseRenderer',
             'rest_framework.renderers.JSONRenderer',
             'rest_framework.renderers.BrowsableAPIRenderer',
         ),
@@ -239,6 +246,23 @@ class Common(Configuration):
         'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),
         # JWT_REFRESH_EXPIRATION_DELTA : JWT 토큰의 갱신 유효기간
     }
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler'
+            },
+        },
+        'loggers': {
+            '': {  # 'catch all' loggers by referencing it with the empty string
+                'handlers': ['console'],
+                'level': 'DEBUG',
+            },
+        },
+    }
+    logging.config.dictConfig(LOGGING)
+
 
     def __init__(self):
         super()
